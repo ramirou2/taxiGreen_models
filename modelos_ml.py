@@ -94,7 +94,7 @@ def buscar_inversion(inversion_inicial, n_autos_fijos):
 
 def ml_clima(data):
     X = data[['precipitation', 'snowfall', 'apparent_temperature', 'day_of_week', 'hour']]
-    y = data[['cantidad_viajes']]
+    y = data[['cantidad_viajes', 'total_amount', 'trip_distance']]
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
     # Normalizar los datos
@@ -222,7 +222,7 @@ def complete_exec_2():
 
     #Acá se hace eso para disminuir recursos.
     X = data[['precipitation', 'snowfall', 'apparent_temperature', 'day_of_week', 'hour']]
-    y = data[['cantidad_viajes']]
+    y = data[['cantidad_viajes', 'total_amount', 'trip_distance']]
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
     # Normalizar los datos
@@ -230,7 +230,7 @@ def complete_exec_2():
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled = scaler.transform(X_test)
     # Entrenar el modelo final con los mejores hiperparámetros
-    best_params = {'max_depth': 10, 'min_samples_split': 10, 'n_estimators': 50}
+    best_params = {'max_depth': 10, 'min_samples_split': 10, 'n_estimators': 200}
     best_rf_model = RandomForestRegressor(random_state=42, **best_params)
     best_rf_model.fit(X_train_scaled, y_train)
 
@@ -296,5 +296,5 @@ if __name__ == "__main__":
 
     print(f'Mean Squared Error (Random Forest): {mse}')
     print(f'R-squared (Random Forest): {r2}')
-    print(f'Best Hyperparameters: {best_params}') #  {'max_depth': 10, 'min_samples_split': 10, 'n_estimators': 50}
+    print(f'Best Hyperparameters: {best_params}') #  {'max_depth': 10, 'min_samples_split': 10, 'n_estimators': 200}
     print(f'Tamaño del modelo { (sys.getsizeof(model)) / (1024 * 1024)}')
