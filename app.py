@@ -8,7 +8,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import os
-os.environ.get('PYTHON_VERSION')
+import requests
 
 #Función para nuestra animación
 def load_lottieurl(url):
@@ -30,6 +30,23 @@ dict_days =  {
     'Sábado': 5,
     'Domingo': 6
 }
+# Función para detectar el esquema de color del navegador
+def detect_dark_mode():
+    try:
+        # Hacer una solicitud HTTP a una API que devuelve el esquema de color del sistema operativo del usuario
+        response = requests.get('https://schema.org/DarkMode')
+        data = response.json()
+        return data.get('darkMode', False)
+    except:
+        return False
+
+# Configura Seaborn para que use el tema oscuro o claro
+def set_seaborn_theme(dark_mode):
+    if dark_mode:
+        sns.set_theme(style="darkgrid")
+    else:
+        sns.set_theme(style="whitegrid")
+
 
 @st.cache(allow_output_mutation=True)
 def cargar_modelo():
@@ -59,7 +76,7 @@ with st.container():
         En este modelo se plantea un adelanto simplificado de un modelo Random Forest.Para calcular cuantos taxis aproximados se necesitan según el clima, día y hora.
             """
             )
-        st.write("[Repositorio Modelo](https://youtube.com)")
+        st.write("[Repositorio Modelo](https://github.com/ramirou2/taxiGreen_models)")
     
     with right_column:
         st_lottie(lottie_taxi, height=300, key="taxi1")
@@ -148,28 +165,21 @@ with st.container():
         st.subheader('Gasto en Combustible en 1 año según automóvil')
         st.write('Tomando como ejemplo un auto electrico y un auto a combustible regular se compara el consumo en un año, a 300 km por día')
 
-        sns.set_style("darkgrid")
+        set_seaborn_theme(detect_dark_mode())
+        custom_palette = sns.color_palette(['green', 'red']) 
         fig = plt.figure(figsize=(10, 4))
-        ax = sns.barplot(data=autos, x='modelComplete', y='fuelCostPerYear')
-        plt.xlabel('Automóvil')
-        plt.ylabel('Gasto en Combustible')
-        plt.tight_layout()
-        
+        ax = sns.barplot(data=autos, x='modelComplete', y='fuelCostPerYear', palette=custom_palette)
         ax.set_facecolor('none')  # Fondo transparente
         fig.patch.set_facecolor('none')
-        ax.spines['bottom'].set_color('white')
-        ax.spines['top'].set_color('white')
-        ax.spines['left'].set_color('white')
-        ax.spines['right'].set_color('white')
-        ax.xaxis.label.set_color('white')
-        ax.yaxis.label.set_color('white')
-        ax.tick_params(axis='x', colors='white')
-        ax.tick_params(axis='y', colors='white')
+        ax.set_xlabel(r'$\mathbf{Automóvil}$', fontsize=12, fontweight='bold')
+        ax.set_ylabel(r'$\mathbf{Gasto\ en\ Combustible}$', fontsize=12, fontweight='bold')
+        
+
 
         st.pyplot(fig)
 
         #Segundo gráfico, según flota obtenida y una flota regular________________________________________________
-        st.subheader('Gasto en Combustible en 1 año según flota obtenida Vs flota regular')
+        st.subheader('Gasto en Combustible en 1 año según la flota obtenida Vs flota regular de autos a gasolina.')
         st.write('Se compara el consumo en un año, a 300 km por día de una flota regular vs la obtenida')
         n_electricos = flota_obtenida[flota_obtenida['fuelType1'] == 'Electricity'].shape[0]
         n_regular = flota_obtenida[flota_obtenida['fuelType1'] == 'Regular Gasoline'].shape[0]
@@ -185,29 +195,21 @@ with st.container():
         dataFuel = pd.DataFrame( {'Tipo de Flota': ['flota', 'flota Regular'],
                                     'Gasto Anual Total': [flotaComb, flotaRegular] })
         
-        sns.set_style("darkgrid")
+        set_seaborn_theme(detect_dark_mode())
         fig2 = plt.figure(figsize=(10, 4))
-        ax = sns.barplot(x='Tipo de Flota', y='Gasto Anual Total', data=dataFuel, palette="viridis")
+        ax = sns.barplot(x='Tipo de Flota', y='Gasto Anual Total', data=dataFuel, palette=custom_palette)
         ax.set_facecolor('none')  # Fondo transparente
         fig2.patch.set_facecolor('none')
-        plt.xlabel('Flota Vs Flota Regular', color='white')
-        plt.ylabel('Gasto Anual Total', color='white')
-        # Personaliza los colores de las líneas de los ejes
-        ax.spines['bottom'].set_color('white')
-        ax.spines['top'].set_color('white')
-        ax.spines['left'].set_color('white')
-        ax.spines['right'].set_color('white')
-        ax.xaxis.label.set_color('white')
-        ax.yaxis.label.set_color('white')
-        ax.tick_params(axis='x', colors='white')
-        ax.tick_params(axis='y', colors='white')
+        ax.set_xlabel(r'$\mathbf{Flota\ Vs\ Flota\ Regular}$', fontsize=12, fontweight='bold')
+        ax.set_ylabel(r'$\mathbf{Gasto\ Anual\ Total}$', fontsize=12, fontweight='bold')
+
 
         st.pyplot(fig2)
 
         # tercer grafico, Emisiones ________________________________________________________________________________________-
         # Emisiones de Co2
         flota_obtenida['co2PerYear'] = flota_obtenida['co2'] * 300 * 365
-        st.subheader('Emisiones de Co2 un año flota obtenida Vs flota regular')
+        st.subheader('Emisiones de Co2 un año flota obtenida Vs flota regular de autos a gasolina')
         st.write('Se comparan las emisiones de la flota obtenida vs una regular')
         st.markdown(f'La flota esta compuesta por {n_electricos} autos electricos y {n_regular} a gasolina regular')
 
@@ -217,22 +219,14 @@ with st.container():
         dataFuel = pd.DataFrame( {'Tipo de Flota': ['flota', 'flota Regular'],
                                     'Emisiones Totales': [flota, flotaRegular] })
         
-        sns.set_style("darkgrid")
+        set_seaborn_theme(detect_dark_mode())
         fig3 = plt.figure(figsize=(10, 4))
-        ax = sns.barplot(x='Tipo de Flota', y='Emisiones Totales', data=dataFuel, palette="viridis")
+        ax = sns.barplot(x='Tipo de Flota', y='Emisiones Totales', data=dataFuel, palette=custom_palette)
         ax.set_facecolor('none')  # Fondo transparente
         fig3.patch.set_facecolor('none')
-        plt.xlabel('Flota Vs Flota Regular', color='white')
-        plt.ylabel('Emisiones Totales', color='white')
-        # Personaliza los colores de las líneas de los ejes
-        ax.spines['bottom'].set_color('white')
-        ax.spines['top'].set_color('white')
-        ax.spines['left'].set_color('white')
-        ax.spines['right'].set_color('white')
-        ax.xaxis.label.set_color('white')
-        ax.yaxis.label.set_color('white')
-        ax.tick_params(axis='x', colors='white')
-        ax.tick_params(axis='y', colors='white')
+        ax.set_xlabel(r'$\mathbf{Flota\ Vs\ Flota\ Regular}$', fontsize=12, fontweight='bold')
+        ax.set_ylabel(r'$\mathbf{Emisiones\ Totales}$', fontsize=12, fontweight='bold')
 
         st.pyplot(fig3)
-    st.write("[Repositorio Modelo](https://youtube.com)")
+
+    st.write("[Repositorio Modelo](https://github.com/ramirou2/taxiGreen_models)")
