@@ -114,16 +114,20 @@ with st.container():
         salida = st.columns(4)
         with salida[0]:
             st.write("Salida en cantidad de viajes:")
-            st.write(f"{ int(model.predict(datos)[0][0])} viajes" )
+            viajes = int(model.predict(datos)[0][0]) 
+            st.write(f"{viajes} viajes" )
         with salida[1]:
             st.write("Salida en cantidad de taxis promedio:")
-            st.write( f"{int(model.predict(datos)[0][0]/3)} taxis" )
+            taxis = int(model.predict(datos)[0][0]/3)
+            st.write( f" {taxis} taxis" )
         with salida[2]:
             st.write("Salida en cantidad de km recorridos:")
-            st.write( f"{round(float(model.predict(datos)[0][2]), 2)} km" )
+            km = round(float(model.predict(datos)[0][2]), 2)
+            st.write( f" {km} km" )
         with salida[3]:
             st.write("Cantidad de recaudación estimada:")
-            st.write( f"{round(float(model.predict(datos)[0][1]), 2)} dólares " )
+            plata = round(float(model.predict(datos)[0][1]), 2)
+            st.write( f" {plata} dólares " )
 
 with st.container():
     st.write("---")
