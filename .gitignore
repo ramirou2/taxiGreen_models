@@ -1,0 +1,5 @@
+data/taxi/*.parquet
+ml-env/
+.vscode/
+__pycache__/
+
