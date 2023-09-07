@@ -114,13 +114,16 @@ with st.container():
         salida = st.columns(4)
         with salida[0]:
             st.write("Salida en cantidad de viajes:")
-            st.write( int(model.predict(datos)) )
+            st.write(f"{ int(model.predict(datos)[0][0])} viajes" )
         with salida[1]:
             st.write("Salida en cantidad de taxis promedio:")
-            st.write( int(model.predict(datos)/3) )
+            st.write( f"{int(model.predict(datos)[0][0]/3)} taxis" )
         with salida[2]:
             st.write("Salida en cantidad de km recorridos:")
-            st.write( round(float(model.predict(datos) * 1.5), 2) )
+            st.write( f"{round(float(model.predict(datos)[0][2]), 2)} km" )
+        with salida[3]:
+            st.write("Cantidad de recaudación estimada:")
+            st.write( f"{round(float(model.predict(datos)[0][1]), 2)} dólares " )
 
 with st.container():
     st.write("---")
@@ -140,7 +143,9 @@ with st.container():
         flota_obtenida, inversion_inicial = modelos_ml.buscar_inversion(int(inversion_inicial), int(n_autos))
         flota_obtenida = flota_obtenida[['Model', 'Manufacturer', 'fuelType1','co2', 'Noise', 'fuelCost08', 'range']]
         st.write(flota_obtenida[['Model', 'Manufacturer', 'fuelType1']])
-        st.write(inversion_inicial)
+
+        st.write(f"Para la flota de {n_autos} requiere una inversión inicial de:")
+        st.write(f"{inversion_inicial} dólares")
         st.session_state.flota_obtenida = flota_obtenida
     
     # Sección gráficos de apoyo visual
