@@ -7,6 +7,8 @@ import modelos_ml
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import os
+os.environ.get('PYTHON_VERSION')
 
 #Función para nuestra animación
 def load_lottieurl(url):
@@ -18,7 +20,6 @@ def load_lottieurl(url):
 
 lottie_taxi =   load_lottieurl("https://lottie.host/e51b6be4-1ea4-4b20-a34a-1820a759d8f4/qq9JLCQUKn.json")
 lottie_taxi_2 = load_lottieurl("https://lottie.host/ddb625f8-24f8-4e93-b3e8-dabd7c88d6b6/ZfHotMJFrV.json")
-imagen_video = Image.open("./src/images.jpg") #Pon la ruta de tu imagen
 
 dict_days =  {
     'Lunes': 0,
