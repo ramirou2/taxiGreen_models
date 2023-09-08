@@ -17,14 +17,14 @@ def optimizar_flota(n_autos, autos, inversion):
     autos_gasolina = autos[autos['fuelType1'] == 'Regular Gasoline']
     
     # Crear un problema de programación lineal
-    problema = pulp.LpProblem("Optimizacion de Flota", pulp.LpMinimize)
+    problema = pulp.LpProblem("Optimizacion de Flota", pulp.LpMaximize)  # Cambio a LpMaximize para maximizar el rango
     
     # Variables de decisión: Cantidad de cada auto a comprar
     cantidad_autos_electricos = pulp.LpVariable.dicts("CantidadAutosElectricos", autos_electricos.index, lowBound=0, cat='Integer')
     cantidad_autos_gasolina = pulp.LpVariable.dicts("CantidadAutosGasolina", autos_gasolina.index, lowBound=0, cat='Integer')
 
-    # Función objetivo: Minimizar el ruido y las emisiones
-    problema += pulp.lpSum([autos_electricos.loc[i, 'Noise'] * cantidad_autos_electricos[i] for i in autos_electricos.index]) + \
+    # Función objetivo: Maximizar el rango y minimizar el ruido y las emisiones
+    problema += pulp.lpSum([autos_electricos.loc[i, 'range'] * cantidad_autos_electricos[i] for i in autos_electricos.index]) + \
                 pulp.lpSum([autos_gasolina.loc[i, 'Noise'] * cantidad_autos_gasolina[i] for i in autos_gasolina.index]) + \
                 pulp.lpSum([autos_electricos.loc[i, 'co2'] * cantidad_autos_electricos[i] for i in autos_electricos.index]) + \
                 pulp.lpSum([autos_gasolina.loc[i, 'co2'] * cantidad_autos_gasolina[i] for i in autos_gasolina.index])

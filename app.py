@@ -157,7 +157,7 @@ with st.container():
         flota_obtenida = st.session_state.flota_obtenida
         st.title('Gráficos asociados')
         # Preparación de autos ejemplo
-        autos = pd.read_csv('./data/autos_aprobados.csv').sort_values(by = ['Price'])
+        autos = pd.read_csv('./data/autos_aprobados.csv').sort_values(by = ['Price'], ascending=True)
         electrico = autos[autos['fuelType1'] == 'Electricity'].iloc[0]
         regular = autos[autos['fuelType1'] == 'Regular Gasoline'].iloc[0]
         autos = []
@@ -199,7 +199,7 @@ with st.container():
         flota_obtenida['fuelCostPerYear'] = flota_obtenida['fuelCostPerKm'] * 300 * 365
 
         flotaComb = flota_obtenida[flota_obtenida['fuelType1'] == 'Electricity']['fuelCostPerYear'].sum() + flota_obtenida[flota_obtenida['fuelType1'] == 'Regular Gasoline']['fuelCostPerYear'].sum()
-        flotaRegular = (n_electricos + n_regular) * autos[autos['fuelType1'] == 'Regular Gasoline']['fuelCostPerYear'].iloc[0]
+        flotaRegular = (n_electricos + n_regular) * flota_obtenida[flota_obtenida['fuelType1'] == 'Regular Gasoline']['fuelCostPerYear'].iloc[0]
 
         dataFuel = pd.DataFrame( {'Tipo de Flota': ['flota', 'flota Regular'],
                                     'Gasto Anual Total': [flotaComb, flotaRegular] })
@@ -223,7 +223,7 @@ with st.container():
         st.markdown(f'La flota esta compuesta por {n_electricos} autos electricos y {n_regular} a gasolina regular')
 
         flota = flota_obtenida[flota_obtenida['fuelType1'] == 'Electricity']['co2PerYear'].sum() + flota_obtenida[flota_obtenida['fuelType1'] == 'Regular Gasoline']['co2PerYear'].sum()
-        flotaRegular = (n_electricos + n_regular) * autos[autos['fuelType1'] == 'Regular Gasoline']['co2PerYear'].iloc[0]
+        flotaRegular = (n_electricos + n_regular) * flota_obtenida[flota_obtenida['fuelType1'] == 'Regular Gasoline']['co2PerYear'].iloc[0]
 
         dataFuel = pd.DataFrame( {'Tipo de Flota': ['flota', 'flota Regular'],
                                     'Emisiones Totales': [flota, flotaRegular] })
