@@ -88,7 +88,7 @@ with st.container():
     st.header("Ingrese los datos:")
     dia = st.selectbox("Día:", ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"])
     hora = st.number_input("Hora:", min_value=0, step=1, max_value=23)
-    temperatura = st.number_input("Temperatura en °C:", min_value=0, max_value=50)
+    temperatura = st.number_input("Temperatura en °C:", min_value=-20, max_value=50)
     lluvia = st.number_input("Lluvia en mm:")
     nieve = st.number_input("Nieve en cm:")
 
