@@ -155,7 +155,7 @@ with st.container():
     # Sección gráficos de apoyo visual
     if st.button("Simular flota en acción"):
         flota_obtenida = st.session_state.flota_obtenida
-        st.title('Gráficos asociados a gasto en combustibles')
+        st.title('Gráficos asociados')
         # Preparación de autos ejemplo
         autos = pd.read_csv('./data/autos_aprobados.csv').sort_values(by = ['Price'])
         electrico = autos[autos['fuelType1'] == 'Electricity'].iloc[0]
