@@ -22,7 +22,7 @@ def optimizar_flota(n_autos, autos, inversion):
     # Variables de decisión: Cantidad de cada auto a comprar
     cantidad_autos_electricos = pulp.LpVariable.dicts("CantidadAutosElectricos", autos_electricos.index, lowBound=0, cat='Integer')
     cantidad_autos_gasolina = pulp.LpVariable.dicts("CantidadAutosGasolina", autos_gasolina.index, lowBound=0, cat='Integer')
-    
+
     # Función objetivo: Minimizar el ruido y las emisiones
     problema += pulp.lpSum([autos_electricos.loc[i, 'Noise'] * cantidad_autos_electricos[i] for i in autos_electricos.index]) + \
                 pulp.lpSum([autos_gasolina.loc[i, 'Noise'] * cantidad_autos_gasolina[i] for i in autos_gasolina.index]) + \
